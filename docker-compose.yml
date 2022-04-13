@@ -1,0 +1,40 @@
+version: '3.5'
+
+services:
+    vernemq:
+        environment:
+            - DOCKER_VERNEMQ_ACCEPT_EULA=yes
+            - DOCKER_VERNEMQ_ALLOW_ANONYMOUS=on
+            - MQTT_TOPIC=thndr-trading
+        image: erlio/docker-vernemq
+        ports: 
+            - "1883:1883"
+        container_name: thndr_vernemq
+    streamer:
+        environment:
+            - MQTT_HOST=vernemq
+            - MQTT_PORT=1883
+            - MQTT_TOPIC=thndr-trading
+        image: thndr/streamer:0.2
+        depends_on:
+            - vernemq
+    mqtt_client_thndr_task:
+        build: ./mqtt
+        environment:
+            - DB_URL=thndr_assignment_database  
+            - VERNEMQ_HOSTNAME=thndr_vernemq
+        depends_on:
+            - vernemq
+            - streamer
+        container_name: thndr_mqtt
+    database_thndr_task:
+        build: ./server
+        volumes:
+            - ./server/app/src/db/thndr.db:/thndr-database/app/src/db/thndr.db
+        ports:
+            - "80:80"
+        container_name: thndr_assignment_database
+
+   
+
+

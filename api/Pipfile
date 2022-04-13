@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "*"
+paho-mqtt = "*"
+uvicorn = "*"
+mypy = "*"
+sqlalchemy = "*"
+requests-futures = "*"
+asyncio = "*"
+pytest = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"
